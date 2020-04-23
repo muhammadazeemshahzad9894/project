@@ -1,8 +1,8 @@
 from datetime import datetime
-
+from django.contrib.sessions.models import Session
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
-
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from .models import Clients
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -112,13 +112,20 @@ def approve_user(request, myid):
 
 
 def login_user(request):
-
-    user = Clients.objects.filter(cnic=request.POST.get('login', 'off'), password=request.POST.get('password', 'off'), status=1)
+    
+    user = Clients.objects.filter(cnic=request.POST.get('login', 'off'), password=request.POST.get('password', 'off'))
     data = {'user':user}
+
     if user:
-        return render(request, 'user_home.html', data)
+        if Clients.objects.filter(cnic=request.POST.get('login', 'off'), password=request.POST.get('password', 'off'), status=1):
+            request.session['is_logged'] = True
+            return render(request, 'user_home.html', data)
+        else:
+            messages.error(request, 'User not Approved')
+            return redirect('usersystem:userlogin')
     else:
-        return HttpResponse('problem')
+        messages.error(request, 'User Name or Password is Incorrect')
+        return redirect('usersystem:userlogin')
 
 
 def login_admin(request):
@@ -135,7 +142,7 @@ def login_admin(request):
     
 
 def logout_user(request):
-    
+    request.session['is_logged'] = False
     return redirect('usersystem:index')
 
 

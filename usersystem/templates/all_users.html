@@ -53,7 +53,7 @@
                                     <td class="text-center"> {{i.gender}} </td>
                                     <td class="text-center"> {{i.password}} </td>
                                     {% if i.status == 0 %}
-                                        <td class="text-center"><a href="{% url 'usersystem:approve_user' i.id %}"><button class="btn btn-danger">Not Approved</button></a></td>
+                                        <td class="text-center"><a href="{% url 'usersystem:approve_user' i.id %}"><button class="btn btn-danger">Approve ?</button></a></td>
                                     {% else  %}
                                         <td class="text-center"><a href="#"><button class="btn btn-success">Approved</button></a></td>
                                     {% endif %}
