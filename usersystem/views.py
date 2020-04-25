@@ -124,22 +124,28 @@ def login_user(request):
             messages.error(request, 'User not Approved')
             return redirect('usersystem:userlogin')
     else:
-        messages.error(request, 'User Name or Password is Incorrect')
+        messages.error(request, 'User Name or Password is Incorrect...!')
         return redirect('usersystem:userlogin')
 
 
 def login_admin(request):
-    #password=request.POST.get('password', 'off')
-    #username=request.POST.get('username', 'off')
+    
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        password=request.POST.get('password', 'off')
+        username=request.POST.get('username', 'off')
+        
+        #username = request.POST['username']
+        #password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
         if user:
             return redirect('usersystem:all_users')
         else:
-            return HttpResponse('problem')
-    
+            messages.error(request, 'User Name or Password is Incorrect...!')
+            return redirect('usersystem:adminlogin')
+    else:
+        return redirect('usersystem:adminlogin')
+
+
 
 def logout_user(request):
     request.session['is_logged'] = False
